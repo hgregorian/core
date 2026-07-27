@@ -35,20 +35,18 @@ class NanoleafCoordinator(DataUpdateCoordinator[None]):
             update_interval=timedelta(minutes=1),
         )
         self.nanoleaf = nanoleaf
-        self._cached_effect: str | None = None
 
     @override
     async def _async_update_data(self) -> None:
         try:
             await self.nanoleaf.get_info()
 
-            effect = self.nanoleaf.selected_effect
-
-            if not self.nanoleaf.is_on or effect is None or effect in RESERVED_EFFECTS:
-                self._cached_effect = None
-            elif effect != self._cached_effect:
+            if (
+                self.nanoleaf.is_on
+                and (effect := self.nanoleaf.selected_effect) is not None
+                and effect not in RESERVED_EFFECTS
+            ):
                 await self.nanoleaf.get_effect_details(effect)
-                self._cached_effect = effect
         except Unavailable as err:
             raise UpdateFailed from err
         except InvalidToken as err:
