@@ -11,6 +11,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
+from .const import RESERVED_EFFECTS
+
 _LOGGER = logging.getLogger(__name__)
 
 type NanoleafConfigEntry = ConfigEntry[NanoleafCoordinator]
@@ -42,6 +44,7 @@ class NanoleafCoordinator(DataUpdateCoordinator[None]):
             if (
                 self.nanoleaf.is_on
                 and (effect := self.nanoleaf.selected_effect) is not None
+                and effect not in RESERVED_EFFECTS
             ):
                 await self.nanoleaf.get_effect_details(effect)
         except Unavailable as err:

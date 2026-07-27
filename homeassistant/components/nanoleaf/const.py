@@ -13,4 +13,6 @@ TOUCH_GESTURE_TRIGGER_MAP = {
     5: "swipe_right",
 }
 
+RESERVED_EFFECTS = ("*Solid*", "*Static*", "*Dynamic*")
+
 ATTR_EFFECT_PALETTE = "effect_palette_rgb"
