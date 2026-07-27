@@ -14,7 +14,9 @@ from homeassistant.components.light import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.util import color as color_util
 
+from .const import ATTR_EFFECT_PALETTE
 from .coordinator import NanoleafConfigEntry, NanoleafCoordinator
 from .entity import NanoleafEntity
 
@@ -75,6 +77,15 @@ class NanoleafLight(NanoleafEntity, LightEntity):
     def effect_list(self) -> list[str]:
         """Return the list of supported effects."""
         return self._nanoleaf.effects_list
+
+    @property
+    @override
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the state attributes of the light."""
+        if not self.is_on or self.effect is None:
+            return {ATTR_EFFECT_PALETTE: None}
+
+        return {ATTR_EFFECT_PALETTE: self._effect_palette_rgb() or None}
 
     @property
     @override
@@ -139,3 +150,27 @@ class NanoleafLight(NanoleafEntity, LightEntity):
         transition: float | None = kwargs.get(ATTR_TRANSITION)
         await self._nanoleaf.turn_off(None if transition is None else int(transition))
         await self.coordinator.async_refresh()
+
+    def _effect_palette_rgb(self) -> list[list[int]]:
+        """Return the current effect palette/hexPalette as RGB colors."""
+        effect_details = self._nanoleaf.effect_details
+
+        if hex_palette := effect_details.get("hexPalette"):
+            return [
+                color_util.rgb_hex_to_rgb_list(color.removeprefix("#"))
+                for color in hex_palette
+            ]
+
+        if palette := effect_details.get("palette"):
+            return [
+                list(
+                    color_util.color_hsv_to_RGB(
+                        color["hue"],
+                        color["saturation"],
+                        color["brightness"],
+                    )
+                )
+                for color in palette
+            ]
+
+        return []

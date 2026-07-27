@@ -16,7 +16,9 @@
   "integration_type": "device",
   "iot_class": "local_push",
   "loggers": ["aionanoleaf2"],
-  "requirements": ["aionanoleaf2==1.0.2"],
+  "requirements": [
+    "git+https://github.com/hgregorian/aionanoleaf2.git@add-effect-details"
+  ],
   "ssdp": [
     {
       "st": "Nanoleaf_aurora:light"

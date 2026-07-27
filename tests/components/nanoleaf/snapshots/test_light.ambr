@@ -60,6 +60,7 @@
         'Sunset',
         'Nemo',
       ]),
+      'effect_palette_rgb': None,
       <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Nanoleaf',
       <LightEntityStateAttribute.HS_COLOR: 'hs_color'>: None,
       <LightEntityCapabilityAttribute.MAX_COLOR_TEMP_KELVIN: 'max_color_temp_kelvin'>: 4500,

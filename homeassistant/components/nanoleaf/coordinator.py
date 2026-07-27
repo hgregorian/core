@@ -38,6 +38,12 @@ class NanoleafCoordinator(DataUpdateCoordinator[None]):
     async def _async_update_data(self) -> None:
         try:
             await self.nanoleaf.get_info()
+
+            if (
+                self.nanoleaf.is_on
+                and (effect := self.nanoleaf.selected_effect) is not None
+            ):
+                await self.nanoleaf.get_effect_details(effect)
         except Unavailable as err:
             raise UpdateFailed from err
         except InvalidToken as err:

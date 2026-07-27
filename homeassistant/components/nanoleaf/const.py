@@ -12,3 +12,5 @@ TOUCH_GESTURE_TRIGGER_MAP = {
     4: "swipe_left",
     5: "swipe_right",
 }
+
+ATTR_EFFECT_PALETTE = "effect_palette_rgb"
