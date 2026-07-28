@@ -38,6 +38,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: NanoleafConfigEntry) -> 
 
     async def light_event_callback(event: StateEvent | EffectsEvent) -> None:
         """Receive state and effect event."""
+        if isinstance(event, EffectsEvent):
+            await coordinator.async_update_effect_details()
+
         coordinator.async_set_updated_data(None)
 
     if supports_touch := nanoleaf.model in TOUCH_MODELS:
